@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function GET(req: Request) {
+  const authed = (await cookies()).get("krotus_auth")?.value === "1";
+  if (!authed) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
+  }
+
   const secret = process.env.CONVEX_API_SECRET;
   const upstreamBase = process.env.CONVEX_QUOTES_URL;
 
