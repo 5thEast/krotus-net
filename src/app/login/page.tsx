@@ -1,9 +1,10 @@
 "use client";
+export const dynamic = "force-dynamic";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginInner() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -20,6 +21,7 @@ export default function LoginPage() {
     const res = await fetch("/api/login", {
       method: "POST",
       headers: { "content-type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ password }),
     });
 
@@ -31,7 +33,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push(next);
+    router.replace(next);
     router.refresh();
   }
 
@@ -48,7 +50,6 @@ export default function LoginPage() {
           placeholder="Password"
           style={{ padding: 12, borderRadius: 10, border: "1px solid #e5e7eb" }}
         />
-
         <button
           type="submit"
           disabled={loading}
@@ -56,9 +57,16 @@ export default function LoginPage() {
         >
           {loading ? "Signing in…" : "Sign in"}
         </button>
-
         {err && <div style={{ color: "crimson" }}>{err}</div>}
       </form>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: 20, fontFamily: "ui-sans-serif, system-ui" }}>Loading…</div>}>
+      <LoginInner />
+    </Suspense>
   );
 }
