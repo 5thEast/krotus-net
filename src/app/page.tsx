@@ -1,19 +1,29 @@
-export const revalidate = 10; // refresh server-rendered data every 10s (ISR)
+import { headers } from "next/headers";
+
+export const revalidate = 10;
 
 type Quote = {
   _id: string;
-  createdAt?: number; // ms since epoch
+  createdAt?: number;
   quote: string;
   subject?: string;
   messageId?: string;
 };
 
-async function getLatestQuotes(): Promise<Quote[]> {
-  const url = process.env.NEXT_PUBLIC_QUOTES_URL;
-  if (!url) throw new Error("Missing NEXT_PUBLIC_QUOTES_URL");
+function formatTime(ms?: number) {
+  if (!ms) return "";
+  return new Date(ms).toLocaleString();
+}
 
-  const res = await fetch(url, {
-    // with revalidate above, Next will cache + refresh automatically
+async function getLatestQuotes(): Promise<Quote[]> {
+  const h = await headers();
+  const proto = h.get("x-forwarded-proto") ?? "http";
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  if (!host) throw new Error("Missing host header");
+
+  const origin = `${proto}://${host}`;
+
+  const res = await fetch(`${origin}/api/quotes`, {
     next: { revalidate: 10 },
   });
 
@@ -26,41 +36,38 @@ async function getLatestQuotes(): Promise<Quote[]> {
   return data.quotes ?? [];
 }
 
-function formatTime(ms?: number) {
-  if (!ms) return "";
-  const d = new Date(ms);
-  return d.toLocaleString();
-}
-
 export default async function Page() {
-  const quotes = await getLatestQuotes();
+  let quotes: Quote[] = [];
+  let error: string | null = null;
+
+  try {
+    quotes = await getLatestQuotes();
+  } catch (e: any) {
+    error = e?.message ?? "Failed to load quotes";
+  }
 
   return (
     <main style={{ maxWidth: 820, margin: "40px auto", padding: "0 16px", fontFamily: "ui-sans-serif, system-ui" }}>
       <header style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
         <h1 style={{ fontSize: 36, margin: 0 }}>krotus.net</h1>
-        <div style={{ opacity: 0.7, fontSize: 14 }}>
-          Updating every ~10s
-        </div>
+        <div style={{ opacity: 0.7, fontSize: 14 }}>Updating every ~10s</div>
       </header>
 
       <section style={{ marginTop: 24, display: "grid", gap: 12 }}>
-        {quotes.length === 0 ? (
+        {error ? (
           <div style={{ padding: 16, border: "1px solid #e5e7eb", borderRadius: 12 }}>
-            No quotes yet.
+            <div style={{ fontWeight: 600, marginBottom: 6 }}>Couldn’t load quotes</div>
+            <div style={{ opacity: 0.8, fontSize: 14 }}>{error}</div>
           </div>
+        ) : quotes.length === 0 ? (
+          <div style={{ padding: 16, border: "1px solid #e5e7eb", borderRadius: 12 }}>No quotes yet.</div>
         ) : (
           quotes.map((q) => (
             <article key={q._id} style={{ padding: 16, border: "1px solid #e5e7eb", borderRadius: 12 }}>
               <div style={{ fontSize: 20, lineHeight: 1.35 }}>{q.quote}</div>
-
               <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between", gap: 10, opacity: 0.75 }}>
-                <div style={{ fontSize: 13 }}>
-                  {q.subject ? <>— {q.subject}</> : <>&nbsp;</>}
-                </div>
-                <div style={{ fontSize: 13 }}>
-                  {formatTime(q.createdAt)}
-                </div>
+                <div style={{ fontSize: 13 }}>{q.subject ? <>— {q.subject}</> : <>&nbsp;</>}</div>
+                <div style={{ fontSize: 13 }}>{formatTime(q.createdAt)}</div>
               </div>
             </article>
           ))
@@ -68,7 +75,7 @@ export default async function Page() {
       </section>
 
       <footer style={{ marginTop: 28, opacity: 0.6, fontSize: 12 }}>
-        Data from your Convex HTTP endpoint.
+        Data served via <code>/api/quotes</code> (secret stays server-side).
       </footer>
     </main>
   );
