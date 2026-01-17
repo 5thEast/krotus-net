@@ -20,7 +20,6 @@ export default async function Page() {
     >
       <header style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
         <h1 style={{ fontSize: 32, margin: 0 }}>krotus.net</h1>
-        <div style={{ opacity: 0.7, fontSize: 14 }}>private</div>
       </header>
 
       {/* Small rotating quote banner */}
@@ -28,11 +27,8 @@ export default async function Page() {
         <QuoteBanner intervalMs={6000} />
       </div>
 
-      <Leaderboard />
+      <Leaderboard/>
 
-      <footer style={{ marginTop: 28, opacity: 0.6, fontSize: 12 }}>
-        Quotes load from <code>/api/quotes</code>.
-      </footer>
     </main>
   );
 }
