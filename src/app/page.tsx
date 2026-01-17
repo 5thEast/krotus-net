@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import QuoteBanner from "./quote-banner";
-
+import Leaderboard from "./leaderboard";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
@@ -28,19 +28,7 @@ export default async function Page() {
         <QuoteBanner intervalMs={6000} />
       </div>
 
-      {/* Main content area (leaderboard goes here later) */}
-      <section style={{ marginTop: 28 }}>
-        <div
-          style={{
-            padding: 18,
-            border: "1px solid #e5e7eb",
-            borderRadius: 14,
-            opacity: 0.75,
-          }}
-        >
-          Leaderboard coming soon...
-        </div>
-      </section>
+      <Leaderboard />
 
       <footer style={{ marginTop: 28, opacity: 0.6, fontSize: 12 }}>
         Quotes load from <code>/api/quotes</code>.
