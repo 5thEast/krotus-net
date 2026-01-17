@@ -38,7 +38,7 @@ export default async function Page() {
             opacity: 0.75,
           }}
         >
-          Leaderboard coming soon…
+          Leaderboard coming soon...
         </div>
       </section>
 

@@ -84,20 +84,18 @@ export default function QuoteBanner({
       if (switchTimer.current) window.clearTimeout(switchTimer.current);
     };
   }, [quotes.length, intervalMs]);
-
   return (
     <div
       style={{
-        border: "1px solid #e5e7eb",
-        borderRadius: 14,
         padding: "10px 12px",
         overflow: "hidden",
-        background: "black",
+        background: "#000000",
+        color: "#ffffff",
+        border: "1px solid #222",
+        borderRadius: 14,
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-
-
         <div style={{ flex: 1, minWidth: 0 }}>
           {err ? (
             <div style={{ fontSize: 14, color: "crimson" }}>{err}</div>
@@ -106,66 +104,28 @@ export default function QuoteBanner({
           ) : (
             <div
               style={{
-                display: "flex",
-                alignItems: "baseline",
-                justifyContent: "space-between",
-                gap: 12,
+                fontSize: 15,
+                lineHeight: 1.35,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                transform: phase === "in" ? "translateX(0%)" : "translateX(-110%)",
+                opacity: phase === "in" ? 1 : 0,
+                transition: "transform 420ms ease, opacity 420ms ease",
               }}
+              title={`${current.quote}${current.subject ? ` — ${current.subject}` : ""}`}
             >
-              <div
-                style={{
-                  fontSize: 15,
-                  lineHeight: 1.35,
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  transform:
-                    phase === "in" ? "translateX(0%)" : "translateX(-110%)",
-                  opacity: phase === "in" ? 1 : 0,
-                  transition: "transform 420ms ease, opacity 420ms ease",
-                }}
-                title={current.quote}
-              >
-                {current.quote}
-              </div>
-
-              <div
-                style={{
-                  fontSize: 12,
-                  opacity: 0.7,
-                  whiteSpace: "nowrap",
-                  marginLeft: 12,
-                }}
-              >
-                {current.subject ? `— ${current.subject}` : ""}
-              </div>
+              <span>{current.quote}</span>
+              {current.subject ? (
+                <span style={{ opacity: 0.75, marginLeft: 8 }}>
+                  — {current.subject}
+                </span>
+              ) : null}
             </div>
           )}
         </div>
-        <button
-          onClick={() => {
-            setPhase("out");
-            window.setTimeout(() => {
-              setIdx((x) => x + 1);
-              setPhase("in");
-            }, 200);
-          }}
-          style={{
-            padding: "6px 10px",
-            borderRadius: 10,
-            border: "1px solid #333",
-            background: "#111",
-            color: "#fff",
-            cursor: "pointer",
-            fontSize: 12,
-            opacity: 0.9,
-          }}
-          title="Next quote"
-        >
-          next →
-        </button>
-
       </div>
     </div>
   );
+
 }
