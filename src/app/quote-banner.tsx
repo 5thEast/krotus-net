@@ -37,7 +37,7 @@ function shuffle<T>(arr: T[]) {
 
 
 export default function QuoteBanner({
-  refreshMs = 30000,
+  refreshMs = 5 * 60000,
   gapPx = 60,
   pxPerSecond = 40, // speed control
 }: {
