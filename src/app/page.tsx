@@ -32,6 +32,27 @@ export default async function Page() {
         }}
       />
 
+      {/* CHECKERBOARD BACKGROUND */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: -21, // ✅ visible: above base, below blood (-20)
+          pointerEvents: "none",
+          backgroundImage: `
+      linear-gradient(45deg, rgba(255,255,255,0.10) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(255,255,255,0.10) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.10) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.10) 75%)
+    `,
+          backgroundSize: "60px 60px",
+          backgroundPosition: "0 0, 0 30px, 30px -30px, -30px 0px",
+          opacity: 0.35,
+          filter: "contrast(125%) brightness(80%)",
+        }}
+      />
+
+
       {/* BLOOD DRIP PNG OVERLAY (put file at /public/blood.png) */}
       <div
         style={{
