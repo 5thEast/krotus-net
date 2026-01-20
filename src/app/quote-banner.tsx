@@ -9,23 +9,16 @@ type Quote = {
   subject?: string;
 };
 
-type Phase = "enter" | "center" | "exit";
-
-
-
 function cleanQuote(text: string) {
   return (text ?? "").trim().replace(/\s+/g, " ");
 }
 
 function withQuotes(text: string) {
   const t = cleanQuote(text);
-
-  // if it already starts/ends with quotes, don't double-wrap
   const alreadyQuoted =
     (t.startsWith('"') && t.endsWith('"')) ||
     (t.startsWith("“") && t.endsWith("”")) ||
     (t.startsWith("'") && t.endsWith("'"));
-
   return alreadyQuoted ? t : `“${t}”`;
 }
 
@@ -33,26 +26,34 @@ function lowerSender(s?: string) {
   return (s ?? "").trim().toLowerCase();
 }
 
+function shuffle<T>(arr: T[]) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 
 export default function QuoteBanner({
-  intervalMs = 6000,
   refreshMs = 30000,
+  gapPx = 48,
+  pxPerSecond = 40, // speed control
 }: {
-  intervalMs?: number; // how often to switch to the next quote
-  refreshMs?: number;  // how often to refetch latest quotes
+  refreshMs?: number;
+  gapPx?: number;       // spacing between quotes
+  pxPerSecond?: number; // ticker speed
 }) {
   const [quotes, setQuotes] = useState<Quote[]>([]);
-  const [idx, setIdx] = useState(0);
-  const [phase, setPhase] = useState<Phase>("enter");
   const [err, setErr] = useState<string | null>(null);
 
-  const switchTimer = useRef<number | null>(null);
-  const refreshTimer = useRef<number | null>(null);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
 
-  const current = useMemo(() => {
-    if (quotes.length === 0) return null;
-    return quotes[idx % quotes.length];
-  }, [quotes, idx]);
+  // measured width of ONE copy of the quotes row
+  const [halfWidth, setHalfWidth] = useState(0);
+  const [durationSec, setDurationSec] = useState(20);
 
   async function load() {
     setErr(null);
@@ -62,7 +63,6 @@ export default function QuoteBanner({
       window.location.href = "/login?next=/";
       return;
     }
-
     if (!res.ok) {
       const txt = await res.text().catch(() => "");
       setErr(`Failed to load quotes: ${res.status} ${txt.slice(0, 120)}`);
@@ -71,108 +71,106 @@ export default function QuoteBanner({
 
     const data = (await res.json()) as { quotes?: Quote[] };
     const q = data.quotes ?? [];
-    setQuotes(q);
-    if (q.length > 0) setIdx((prev) => prev % q.length);
+    setQuotes(shuffle(q));
   }
 
-  // Initial load + periodic refresh
   useEffect(() => {
     load();
-    refreshTimer.current = window.setInterval(load, refreshMs);
-    return () => {
-      if (refreshTimer.current) window.clearInterval(refreshTimer.current);
-    };
+    const t = window.setInterval(load, refreshMs);
+    return () => window.clearInterval(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Rotate quotes with a simple in/out animation
+  // Measure widths after render (and on resize)
   useEffect(() => {
-    if (quotes.length === 0) return;
+    function measure() {
+      const track = trackRef.current;
+      if (!track) return;
 
-    let cancelled = false;
+      // track contains 2 copies; half is one copy
+      const full = track.scrollWidth;
+      const half = Math.floor(full / 2);
+      setHalfWidth(half);
 
-    function cycle() {
-      if (cancelled) return;
-
-      // start offscreen right
-      setPhase("enter");
-
-      // move into center
-      setTimeout(() => {
-        if (cancelled) return;
-        setPhase("center");
-      }, 20);
-
-      // after interval, exit left
-      setTimeout(() => {
-        if (cancelled) return;
-        setPhase("exit");
-      }, intervalMs - 450);
-
-      // after exit animation, advance quote
-      setTimeout(() => {
-        if (cancelled) return;
-        setIdx((x) => x + 1);
-        cycle();
-      }, intervalMs);
+      // duration based on distance / speed
+      const sec = Math.max(8, half / pxPerSecond);
+      setDurationSec(sec);
     }
 
-    cycle();
+    // measure soon after paint
+    const r1 = requestAnimationFrame(() => measure());
+    const r2 = requestAnimationFrame(() => measure());
 
+    window.addEventListener("resize", measure);
     return () => {
-      cancelled = true;
+      cancelAnimationFrame(r1);
+      cancelAnimationFrame(r2);
+      window.removeEventListener("resize", measure);
     };
-  }, [quotes.length, intervalMs]);
+  }, [quotes, pxPerSecond, gapPx]);
+
+  const doubled = useMemo(() => {
+    // duplicate for seamless looping
+    return quotes.length ? [...quotes, ...quotes] : [];
+  }, [quotes]);
 
   return (
     <div
+      ref={wrapRef}
       style={{
         padding: "12px 14px",
         overflow: "hidden",
+        whiteSpace: "nowrap",
       }}
-      
     >
+      {err ? (
+        <div style={{ fontSize: 14, color: "crimson" }}>{err}</div>
+      ) : quotes.length === 0 ? (
+        <div style={{ fontSize: 14, opacity: 0.7 }}>Loading…</div>
+      ) : (
+        <>
+          {/* local keyframes */}
+          <style>{`
+            @keyframes quoteTicker {
+              from { transform: translateX(0); }
+              to   { transform: translateX(-${halfWidth}px); }
+            }
+          `}</style>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          {err ? (
-            <div style={{ fontSize: 14, color: "crimson" }}>{err}</div>
-          ) : !current ? (
-            <div style={{ fontSize: 14, opacity: 0.7 }}>Loading…</div>
-          ) : (
-            <div
-              style={{
-                fontSize: 15,
-                lineHeight: 1.35,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                transform:
-                  phase === "enter"
-                    ? "translateX(110%)"
-                    : phase === "center"
-                      ? "translateX(0%)"
-                      : "translateX(-110%)",
-                opacity: phase === "center" ? 1 : 0,
-
-                transition: "transform 420ms ease, opacity 420ms ease",
-              }}
-              title={`${current.quote}${current.subject ? ` — ${current.subject}` : ""}`}
-            >
-              <span>{withQuotes(current.quote)}</span>
-
-              {current.subject ? (
-                <span style={{ opacity: 0.9, marginLeft: 10, color: "#ff2a3b" }}>
-                  — {lowerSender(current.subject)}
-                </span>
-
-              ) : null}
-
-            </div>
-          )}
-        </div>
-      </div>
+          <div
+            ref={trackRef}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: `${gapPx}px`,
+              willChange: "transform",
+              animation: `quoteTicker ${durationSec}s linear infinite`,
+            }}
+          >
+            {doubled.map((q, i) => (
+              <span
+                key={`${q._id}-${i}`}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "baseline",
+                  fontSize: 15,
+                  lineHeight: 1.35,
+                  // optional: prevent each quote chunk from shrinking
+                  flex: "0 0 auto",
+                }}
+                title={`${q.quote}${q.subject ? ` — ${q.subject}` : ""}`}
+              >
+                <span>{withQuotes(q.quote)}</span>
+                {q.subject ? (
+                  <span style={{ opacity: 0.9, marginLeft: 10, color: "#ff2a3b" }}>
+                    — {lowerSender(q.subject)}
+                  </span>
+                ) : null}
+              </span>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
-
 }

@@ -101,14 +101,14 @@ export default function Leaderboard({
                     padding: "16px 18px",
                     display: "flex",
                     alignItems: "baseline",
-                    justifyContent: "space-between",
+                    justifyContent: "center",
                     gap: 12,
                     borderBottom: "1px solid rgba(255, 0, 40, 0.18)",
 
                 }}
             >
                 <div>
-                    <div style={{ fontSize: 18, fontWeight: 900, letterSpacing: 0.2 }}>Pong Leaderboard</div>
+                    <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: 0.2 }}>Pong Leaderboard</div>
 
                 </div>
 
