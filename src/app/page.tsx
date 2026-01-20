@@ -100,42 +100,78 @@ export default async function Page() {
       {/* HEADER */}
       <header
         style={{
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: "auto 1fr auto", // left / center / right
           alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "column",
-          gap: 8,
+          gap: 10,
           marginTop: 14,
           padding: "18px 16px",
 
-          // ✅ Myspace rectangle vibes
           borderRadius: 0,
           border: "2px solid rgba(255, 0, 40, 0.35)",
           background: "rgba(0,0,0,0.78)",
-
-          // cheap bevel / inset outline
           boxShadow:
             "inset 0 0 0 1px rgba(255,255,255,0.06), " +
             "inset 0 -10px 20px rgba(0,0,0,0.75), " +
             "0 0 0 1px rgba(0,0,0,0.9)",
         }}
       >
-        <h1
+        {/* LEFT ICON pinned */}
+        <img
+          src="/krotus.png"
+          alt=""
+          aria-hidden="true"
           style={{
-            fontSize: 42,
-            margin: 0,
-            fontWeight: 900,
-            letterSpacing: 3.2,
-            textTransform: "uppercase",
-            // harsher “sticker” text shadow
-            textShadow:
-              "0 2px 0 rgba(0,0,0,0.9), 0 0 18px rgba(255,0,30,0.12)",
+            justifySelf: "start",
+            width: 120,
+            height: 120,
+            objectFit: "contain",
+            opacity: 0.95,
+          }}
+        />
+
+        {/* CENTER content (title + countdown stacked) */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 14,
+            justifySelf: "center",
           }}
         >
-          KROTUS.NET
-        </h1>
+          <h1
+            style={{
+              fontSize: 42,
+              margin: 0,
+              fontWeight: 900,
+              letterSpacing: 3.2,
+              textTransform: "uppercase",
+              textShadow:
+                "0 2px 0 rgba(0,0,0,0.9), 0 0 18px rgba(255,0,30,0.12)",
+              lineHeight: 1,
+            }}
+          >
+            KROTUS.NET
+          </h1>
 
-        <SaturnaliaCountdown />
+          <SaturnaliaCountdown />
+        </div>
+
+        {/* RIGHT ICON pinned */}
+        <img
+          src="/krotus.png"
+          alt=""
+          aria-hidden="true"
+          style={{
+            justifySelf: "end",
+            width: 120,
+            height: 120,
+            objectFit: "contain",
+            opacity: 0.95,
+            transform: "scaleX(-1)",
+          }}
+        />
       </header>
 
 
@@ -155,7 +191,7 @@ export default async function Page() {
 
         }}
       >
-        <QuoteBanner intervalMs={6000} />
+        <QuoteBanner/>
       </div>
 
 
