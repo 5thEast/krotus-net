@@ -81,13 +81,15 @@ export default function Leaderboard({
         <section
             style={{
                 marginTop: 18,
-                borderRadius: 18,
-                border: "1px solid #e5e7eb",
+                borderRadius: 20,
+                border: "1px solid rgba(255, 0, 40, 0.18)",
                 overflow: "hidden",
-                background: "#0b0b0b",
+                background: "linear-gradient(180deg, #070707 0%, #000 100%)",
                 color: "#fff",
+                boxShadow: "0 25px 90px rgba(0,0,0,0.75)",
             }}
         >
+
             {/* Header */}
             <div
                 style={{
@@ -96,15 +98,18 @@ export default function Leaderboard({
                     alignItems: "baseline",
                     justifyContent: "space-between",
                     gap: 12,
-                    borderBottom: "1px solid #222",
-                    background: "linear-gradient(180deg, #111 0%, #0b0b0b 100%)",
+                    background:
+                        "radial-gradient(800px 240px at 20% 0%, rgba(255,0,30,0.16), transparent 60%), " +
+                        "linear-gradient(180deg, #0b0b0b 0%, #000 100%)",
+                    borderBottom: "1px solid rgba(255, 0, 40, 0.18)",
+
                 }}
             >
                 <div>
                     <div style={{ fontSize: 18, fontWeight: 900, letterSpacing: 0.2 }}>Pong Leaderboard</div>
 
                 </div>
-              
+
             </div>
 
             {err ? (
@@ -114,7 +119,7 @@ export default function Leaderboard({
             ) : (
                 <div style={{ padding: 18 }}>
                     {/* Podium */}
-       
+
                     <div
                         style={{
                             display: "grid",
@@ -139,8 +144,8 @@ export default function Leaderboard({
                                     key={e._id}
                                     style={{
                                         borderRadius: 16,
-                                        border: "1px solid #222",
-                                        background: "#0f0f0f",
+                                        background: "linear-gradient(180deg, #0a0a0a 0%, #000 100%)",
+                                        border: "1px solid rgba(255,0,40,0.14)",
                                         padding: 14,
                                         minHeight: height,
                                         display: "flex",
@@ -162,44 +167,44 @@ export default function Leaderboard({
                                         <div style={{ fontSize: 44, fontWeight: 950, lineHeight: 1 }}>
                                             {toNum(e.score)}
                                         </div>
-                                       
+
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
 
-    
-          {/* Standings list (no progress bars) */}
-            <div style={{ marginTop: 16, display: "grid", gap: 10 }}>
-                {rest.map((e, i) => (
-                    <div
-                        key={e._id}
-                        style={{
-                            display: "grid",
-                            gridTemplateColumns: "60px 1fr 90px",
-                            gap: 12,
-                            alignItems: "center",
-                            padding: "12px 12px",
-                            borderRadius: 14,
-                            border: "1px solid #222",
-                            background: "#0f0f0f",
-                        }}
-                    >
-                        <div style={{ fontSize: 12, opacity: 0.7 }}>#{i + 4}</div>
-                        <div style={{ fontSize: 16, fontWeight: 850, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                            {e.name ?? "unknown"}
-                        </div>
-                        <div style={{ textAlign: "right", fontSize: 18, fontWeight: 950 }}>
-                            {toNum(e.score)}
-                        </div>
-                    </div>
-                ))}
-            </div>
 
-        </div>
-    )
-}
-    </section >
-  );
+                    {/* Standings list (no progress bars) */}
+                    <div style={{ marginTop: 16, display: "grid", gap: 10 }}>
+                        {rest.map((e, i) => (
+                            <div
+                                key={e._id}
+                                style={{
+                                    display: "grid",
+                                    gridTemplateColumns: "60px 1fr 90px",
+                                    gap: 12,
+                                    alignItems: "center",
+                                    padding: "12px 12px",
+                                    borderRadius: 14,
+                                    border: "1px solid #222",
+                                    background: "#0f0f0f",
+                                }}
+                            >
+                                <div style={{ fontSize: 12, opacity: 0.7 }}>#{i + 4}</div>
+                                <div style={{ fontSize: 16, fontWeight: 850, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                    {e.name ?? "unknown"}
+                                </div>
+                                <div style={{ textAlign: "right", fontSize: 18, fontWeight: 950 }}>
+                                    {toNum(e.score)}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                </div>
+            )
+            }
+        </section >
+    );
 }
