@@ -129,11 +129,8 @@ export default function QuoteBanner({
       style={{
         padding: "12px 14px",
         overflow: "hidden",
-        background: "linear-gradient(180deg, #050505 0%, #000 100%)",
-        border: "1px solid rgba(255, 0, 40, 0.18)",
-        borderRadius: 16,
-        boxShadow: "0 0 0 1px rgba(0,0,0,0.8), 0 18px 60px rgba(0,0,0,0.7)",
       }}
+      
     >
 
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

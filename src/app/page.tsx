@@ -104,23 +104,32 @@ export default async function Page() {
           alignItems: "center",
           justifyContent: "center",
           flexDirection: "column",
-          gap: 10,
+          gap: 8,
           marginTop: 14,
-          padding: "16px 14px",
-          borderRadius: 16,
-          border: "1px solid rgba(255, 0, 40, 0.22)",
-          background: "rgba(0,0,0,0.55)",
-          boxShadow: "0 0 0 1px rgba(0,0,0,0.85), 0 18px 60px rgba(0,0,0,0.7)",
+          padding: "18px 16px",
+
+          // ✅ Myspace rectangle vibes
+          borderRadius: 0,
+          border: "2px solid rgba(255, 0, 40, 0.35)",
+          background: "rgba(0,0,0,0.78)",
+
+          // cheap bevel / inset outline
+          boxShadow:
+            "inset 0 0 0 1px rgba(255,255,255,0.06), " +
+            "inset 0 -10px 20px rgba(0,0,0,0.75), " +
+            "0 0 0 1px rgba(0,0,0,0.9)",
         }}
       >
         <h1
           style={{
-            fontSize: 34,
+            fontSize: 42,
             margin: 0,
-            fontWeight: 800,
-            letterSpacing: 2.4,
+            fontWeight: 900,
+            letterSpacing: 3.2,
             textTransform: "uppercase",
-            textShadow: "0 0 18px rgba(255,0,30,0.12)",
+            // harsher “sticker” text shadow
+            textShadow:
+              "0 2px 0 rgba(0,0,0,0.9), 0 0 18px rgba(255,0,30,0.12)",
           }}
         >
           KROTUS.NET
@@ -129,10 +138,26 @@ export default async function Page() {
         <SaturnaliaCountdown />
       </header>
 
+
       {/* QUOTE BANNER */}
-      <div style={{ marginTop: 16 }}>
+      <div
+        style={{
+          marginTop: 14,
+          borderRadius: 0,
+          border: "2px solid rgba(255, 0, 40, 0.35)",
+          background: "rgba(0,0,0,0.78)",
+
+          // cheap bevel / inset outline
+          boxShadow:
+            "inset 0 0 0 1px rgba(255,255,255,0.06), " +
+            "inset 0 -10px 20px rgba(0,0,0,0.75), " +
+            "0 0 0 1px rgba(0,0,0,0.9)",
+
+        }}
+      >
         <QuoteBanner intervalMs={6000} />
       </div>
+
 
       {/* LEADERBOARD */}
       <div style={{ marginTop: 18 }}>

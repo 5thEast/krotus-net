@@ -81,12 +81,17 @@ export default function Leaderboard({
         <section
             style={{
                 marginTop: 18,
-                borderRadius: 20,
-                border: "1px solid rgba(255, 0, 40, 0.18)",
+                borderRadius: 0,
                 overflow: "hidden",
-                background: "linear-gradient(180deg, #070707 0%, #000 100%)",
                 color: "#fff",
-                boxShadow: "0 25px 90px rgba(0,0,0,0.75)",
+                border: "2px solid rgba(255, 0, 40, 0.35)",
+                background: "rgba(0,0,0,0.78)",
+      
+                // cheap bevel / inset outline
+                boxShadow:
+                  "inset 0 0 0 1px rgba(255,255,255,0.06), " +
+                  "inset 0 -10px 20px rgba(0,0,0,0.75), " +
+                  "0 0 0 1px rgba(0,0,0,0.9)",
             }}
         >
 
@@ -98,9 +103,6 @@ export default function Leaderboard({
                     alignItems: "baseline",
                     justifyContent: "space-between",
                     gap: 12,
-                    background:
-                        "radial-gradient(800px 240px at 20% 0%, rgba(255,0,30,0.16), transparent 60%), " +
-                        "linear-gradient(180deg, #0b0b0b 0%, #000 100%)",
                     borderBottom: "1px solid rgba(255, 0, 40, 0.18)",
 
                 }}
@@ -145,7 +147,7 @@ export default function Leaderboard({
                                     style={{
                                         borderRadius: 16,
                                         background: "linear-gradient(180deg, #0a0a0a 0%, #000 100%)",
-                                        border: "1px solid rgba(255,0,40,0.14)",
+                                        border: "1px solid #222",
                                         padding: 14,
                                         minHeight: height,
                                         display: "flex",

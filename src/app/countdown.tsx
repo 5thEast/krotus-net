@@ -24,7 +24,7 @@ export default function SaturnaliaCountdown() {
         alignItems: "center",
         gap: 10,
         padding: "10px 14px",
-        borderRadius: 999,
+        borderRadius: 0,
         border: "1px solid rgba(255, 0, 40, 0.25)",
         background: "linear-gradient(180deg, rgba(30,0,0,0.7) 0%, rgba(0,0,0,0.92) 100%)",
         color: "#f4f4f5",
