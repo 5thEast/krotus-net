@@ -127,14 +127,15 @@ export default function QuoteBanner({
   return (
     <div
       style={{
-        padding: "10px 12px",
+        padding: "12px 14px",
         overflow: "hidden",
-        background: "#000000",
-        color: "#ffffff",
-        border: "1px solid #222",
-        borderRadius: 14,
+        background: "linear-gradient(180deg, #050505 0%, #000 100%)",
+        border: "1px solid rgba(255, 0, 40, 0.18)",
+        borderRadius: 16,
+        boxShadow: "0 0 0 1px rgba(0,0,0,0.8), 0 18px 60px rgba(0,0,0,0.7)",
       }}
     >
+
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           {err ? (
@@ -164,9 +165,10 @@ export default function QuoteBanner({
               <span>{withQuotes(current.quote)}</span>
 
               {current.subject ? (
-                <span style={{ opacity: 0.75, marginLeft: 10 }}>
+                <span style={{ opacity: 0.9, marginLeft: 10, color: "#ff2a3b" }}>
                   — {lowerSender(current.subject)}
                 </span>
+
               ) : null}
 
             </div>
