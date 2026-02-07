@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 
 import QuoteBanner from "./quote-banner";
 import Leaderboard from "./leaderboard";
-import SaturnaliaCountdown from "./countdown";
+import Countdown from "./countdown";
 
 export const dynamic = "force-dynamic";
 
@@ -157,7 +157,7 @@ export default async function Page() {
             KROTUS.NET
           </h1>
 
-          <SaturnaliaCountdown />
+          <Countdown />
         </div>
 
         {/* RIGHT ICON pinned */}

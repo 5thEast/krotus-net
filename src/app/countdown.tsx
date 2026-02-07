@@ -6,9 +6,9 @@ function pad2(n: number) {
     return String(n).padStart(2, "0");
 }
 
-export default function SaturnaliaCountdown() {
-    // Jan 31, 2026 10:00 PM Eastern (EST, UTC-5) = Feb 1, 2026 03:00:00 UTC
-    const target = useMemo(() => new Date(Date.UTC(2026, 1, 1, 3, 0, 0)), []);
+export default function Countdown() {
+    // March 6, 2026 10:00 PM Eastern (EST, UTC-5) = March 7, 2026 03:00 UTC
+    const target = useMemo(() => new Date(Date.UTC(2026, 2, 7, 3, 0, 0)), []);
 
     const [now, setNow] = useState(() => new Date());
 
@@ -29,7 +29,7 @@ export default function SaturnaliaCountdown() {
         background: "linear-gradient(180deg, rgba(30,0,0,0.7) 0%, rgba(0,0,0,0.92) 100%)",
         color: "crimson",
         fontSize: 12,
-        fontWeight:600,
+        fontWeight: 600,
         letterSpacing: 0.9,
         textTransform: "uppercase",
         whiteSpace: "nowrap",
@@ -39,8 +39,8 @@ export default function SaturnaliaCountdown() {
 
     if (diffMs <= 0) {
         return (
-            <div style={pillStyle} title="Saturnalia — Jan 31, 2026 10:00 PM ET">
-                <span style={{ opacity: 0.75 }}>Saturnalia countdown:</span>
+            <div style={pillStyle} title="Mardi Gras — March 6, 2026 10:00 PM ET">
+                <span style={{ opacity: 0.75 }}>Mardi Gras countdown:</span>
                 <span style={{ fontWeight: 950, letterSpacing: 0.2, textTransform: "none" }}>
                     0d {pad2(0)}:{pad2(0)}:{pad2(0)}
                 </span>
@@ -55,8 +55,8 @@ export default function SaturnaliaCountdown() {
     const secs = totalSec % 60;
 
     return (
-        <div style={pillStyle} title="Saturnalia — Jan 31, 2026 10:00 PM ET">
-            <span style={{ opacity: 0.75 }}>Saturnalia countdown:</span>
+        <div style={pillStyle} title="Mardi Gras — March 6, 2026 10:00 PM ET">
+            <span style={{ opacity: 0.75 }}>Mardi Gras countdown:</span>
             <span style={{ fontWeight: 950, letterSpacing: 0.2, textTransform: "none", color: "#ffe7e9" }}>
                 {days}d {pad2(hours)}h {pad2(mins)}m {pad2(secs)}s
             </span>
